@@ -16,12 +16,15 @@ final class GithubSearchViewReactor: Reactor {
     // View로부터 받을 액션
     enum Action {
         case updateQuery(String?)
+        case loadNextPage
     }
     
     // 액션을 받은 경우 해야될 작업 단위
     enum Mutation {
         case setQuery(String?)
         case setRepos([String], nextPage: Int?)
+        case appendRepos([String], nextPage: Int?)
+        case setLoadingNextPage(Bool)
     }
     
     // 현재 상태 (ex. 다음 페이지 유무)
@@ -29,6 +32,7 @@ final class GithubSearchViewReactor: Reactor {
         var query: String?
         var repos: [String] = []
         var nextPage: Int?
+        var isLoadingNextPage: Bool = false
     }
     
     // mutate 실행후 실행, 현재 상태(State)와 작업 단위(Mutation)를 받아 작업 결과가 적용된 최종 상태를 반환
@@ -42,6 +46,15 @@ final class GithubSearchViewReactor: Reactor {
             var newState = state
             newState.repos = repos
             newState.nextPage = nextPage
+            return newState
+        case let .appendRepos(repos, nextPage: nextPage):
+            var newState = state
+            newState.repos.append(contentsOf: repos)
+            newState.nextPage = nextPage
+            return newState
+        case let .setLoadingNextPage(isLoadingNextPage):
+            var newState = state
+            newState.isLoadingNextPage = isLoadingNextPage
             return newState
         }
     }
@@ -58,6 +71,24 @@ final class GithubSearchViewReactor: Reactor {
                 self.search(query: query, page: 1)
                     .take(until: self.action.filter(Action.isUpdateQueryAction))
                     .map { Mutation.setRepos($0, nextPage: $1) }
+            ])
+        case .loadNextPage:
+            guard !self.currentState.isLoadingNextPage else { return .empty() } // 중복 요청 방지
+            guard let page = self.currentState.nextPage else { // 다음 페이지 유무 확인
+                return .empty()
+            }
+            
+            return Observable.concat([
+                // 다음 페이지 로딩중으로 상태 변경하여 중복 요청 방지
+                Observable.just(Mutation.setLoadingNextPage(true)),
+                
+                // 요청
+                self.search(query: self.currentState.query, page: page)
+                    .take(until: self.action.filter(Action.isUpdateQueryAction))
+                    .map { Mutation.appendRepos($0, nextPage: $1) },
+                
+                // 요청 끝났으면 로딩중 아닌 상태로 변경
+                Observable.just(Mutation.setLoadingNextPage(false))
             ])
         }
     }
