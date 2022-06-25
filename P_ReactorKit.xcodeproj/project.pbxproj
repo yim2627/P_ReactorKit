@@ -13,6 +13,7 @@
 		A6490F202866DA9A0070E9D3 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = A6490F1E2866DA9A0070E9D3 /* Main.storyboard */; };
 		A6490F222866DA9B0070E9D3 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = A6490F212866DA9B0070E9D3 /* Assets.xcassets */; };
 		A6490F252866DA9B0070E9D3 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = A6490F232866DA9B0070E9D3 /* LaunchScreen.storyboard */; };
+		A6490F2E2866DB950070E9D3 /* ReactorKit in Frameworks */ = {isa = PBXBuildFile; productRef = A6490F2D2866DB950070E9D3 /* ReactorKit */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -31,6 +32,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				A6490F2E2866DB950070E9D3 /* ReactorKit in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -83,6 +85,9 @@
 			dependencies = (
 			);
 			name = P_ReactorKit;
+			packageProductDependencies = (
+				A6490F2D2866DB950070E9D3 /* ReactorKit */,
+			);
 			productName = P_ReactorKit;
 			productReference = A6490F152866DA9A0070E9D3 /* P_ReactorKit.app */;
 			productType = "com.apple.product-type.application";
@@ -111,6 +116,9 @@
 				Base,
 			);
 			mainGroup = A6490F0C2866DA990070E9D3;
+			packageReferences = (
+				A6490F2C2866DB950070E9D3 /* XCRemoteSwiftPackageReference "ReactorKit" */,
+			);
 			productRefGroup = A6490F162866DA9A0070E9D3 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -358,6 +366,25 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		A6490F2C2866DB950070E9D3 /* XCRemoteSwiftPackageReference "ReactorKit" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/ReactorKit/ReactorKit.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 3.0.0;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		A6490F2D2866DB950070E9D3 /* ReactorKit */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = A6490F2C2866DB950070E9D3 /* XCRemoteSwiftPackageReference "ReactorKit" */;
+			productName = ReactorKit;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = A6490F0D2866DA990070E9D3 /* Project object */;
 }
