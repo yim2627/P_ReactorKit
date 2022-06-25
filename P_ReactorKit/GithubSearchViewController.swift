@@ -37,6 +37,20 @@ class GithubSearchViewController: UIViewController, StoryboardView {
                 cell.textLabel?.text = repo
             }
             .disposed(by: disposeBag)
+        
+        tableView.rx.itemSelected
+            .subscribe(onNext: { [weak self, weak reactor] indexPath in
+                self?.view.endEditing(true)
+                self?.tableView.deselectRow(at: indexPath, animated: false)
+                guard let repo = reactor?.currentState.repos[indexPath.row],
+                      let url = URL(string: "https://github.com/\(repo)") else {
+                    return
+                }
+                
+                let vc = SFSafariViewController(url: url)
+                self?.searchViewController.present(vc, animated: true)
+            })
+            .disposed(by: disposeBag)
     }
 
 }
