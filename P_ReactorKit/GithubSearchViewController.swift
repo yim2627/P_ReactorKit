@@ -21,11 +21,22 @@ class GithubSearchViewController: UIViewController, StoryboardView {
     override func viewDidLoad() {
         super.viewDidLoad()
         tableView.verticalScrollIndicatorInsets.top = tableView.contentInset.top
+        searchViewController.obscuresBackgroundDuringPresentation = false
         navigationItem.searchController = searchViewController
     }
 
     func bind(reactor: GithubSearchViewReactor) {
+        searchViewController.searchBar.rx.text
+            .throttle(.microseconds(300), scheduler: MainScheduler.instance)
+            .map { Reactor.Action.updateQuery($0) }
+            .bind(to: reactor.action)
+            .disposed(by: disposeBag)
         
+        reactor.state.map { $0.repos }
+            .bind(to: tableView.rx.items(cellIdentifier: "cell")) { indexPath, repo, cell in
+                cell.textLabel?.text = repo
+            }
+            .disposed(by: disposeBag)
     }
 
 }
