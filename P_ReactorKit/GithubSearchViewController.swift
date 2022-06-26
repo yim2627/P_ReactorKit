@@ -38,9 +38,7 @@ class GithubSearchViewController: UIViewController, StoryboardView {
                 guard owner.tableView.frame.height > 0 else {
                     return false
                 }
-                print("con height",self.tableView.contentSize.height)
-                print("table height",self.tableView.frame.height)
-                print("offset.y", offset.y)
+                
                 return owner.tableView.frame.height + offset.y >= self.tableView.contentSize.height - 100
             }
             .map { _ in Reactor.Action.loadNextPage }
